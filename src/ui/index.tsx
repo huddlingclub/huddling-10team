@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Check, Minus, Plus } from "./icons";
 import "./ui.css";
 
@@ -72,6 +72,8 @@ export const DayCell = ({ day, kind, label, band }: { day: number; kind: DayKind
 export const DotLoader = () => <div className="ui-loader" aria-hidden><i /><i /><i /></div>;
 
 export function Toast({ message, onClose, ms = 1800 }: { message: string; onClose: () => void; ms?: number }) {
-  useEffect(() => { const t = setTimeout(onClose, ms); return () => clearTimeout(t); }, [message, ms, onClose]);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose; // 최신 onClose를 쓰되, 부모 리렌더로 타이머가 초기화되지 않게 한다
+  useEffect(() => { const t = setTimeout(() => closeRef.current(), ms); return () => clearTimeout(t); }, [message, ms]);
   return <div className="ui-toast" role="status">{message}</div>;
 }
