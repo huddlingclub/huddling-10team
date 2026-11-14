@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import external from "../assets/icons/external.svg";
 import cheer from "../assets/illustrations/penguin-cheer.png";
 import shadow from "../assets/illustrations/shadow.svg";
 import { BackButton } from "../components/TopBar";
-import { addDays, dotDateWd, longDate, shortDateWd } from "../lib/date";
+import { addDays, dotDateWd, longDate } from "../lib/date";
+import { periodLabel, planText } from "../lib/plan";
 import type { Recommendation } from "../types/recommendation";
 import { Button, Toast } from "../ui";
 
@@ -29,9 +30,11 @@ interface Props {
 }
 
 export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Props) {
-  const [toast, setToast] = useState(false);
-  const sameYear = rec.start.slice(0, 4) === rec.end.slice(0, 4);
-  const end = sameYear ? shortDateWd(rec.end) : dotDateWd(rec.end);
+  const [toast, setToast] = useState<string>();
+  useEffect(() => {
+    // 05에서 "이 일정 복사하기"로 넘어오면 일정 문구를 클립보드에 복사 (실패해도 흐름은 계속)
+    navigator.clipboard?.writeText(planText(rec)).then(() => setToast("일정을 복사했어요"), () => {});
+  }, [rec]);
 
   return (
     <div className="screen screen--grey screen--confirm">
@@ -43,7 +46,7 @@ export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Pro
 
       <section className="panel24 hero">
         <h2><em>{rec.totalDays}일</em> 휴가를 확보했어요</h2>
-        <p>{dotDateWd(rec.start)} – {end} · {rec.title}</p>
+        <p>{periodLabel(rec)} · {rec.title}</p>
         <div className="hero__illust">
           <img src={cheer} width={180} height={176} alt="" />
           <img src={shadow} width={190} height={12} alt="" />
@@ -75,9 +78,9 @@ export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Pro
       <div className="cta2">
         <button type="button" className="ui-btn ui-btn--white" onClick={onBack}>다른 일정 고르기</button>
         {/* TODO: 확정 후 동작(저장/공유 등)은 기획 확정 시 연결 */}
-        <Button onClick={() => { onConfirm?.(); setToast(true); }}>확인</Button>
+        <Button onClick={() => { onConfirm?.(); setToast("휴가 계획을 확인했어요"); }}>확인</Button>
       </div>
-      {toast && <div className="toast-wrap"><Toast message="휴가 계획을 확인했어요" onClose={() => setToast(false)} /></div>}
+      {toast && <div className="toast-wrap"><Toast message={toast} onClose={() => setToast(undefined)} /></div>}
     </div>
   );
 }
