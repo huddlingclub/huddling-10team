@@ -54,3 +54,13 @@ export const shiftMonth = (s: string, n: number) => {
   const [y, m] = s.split("-").map(Number);
   return ym(toIso(new Date(y, m - 1 + n, 1)));
 };
+
+const WD = "일월화수목금토";
+/** 2027.3.1 (0 채우지 않음) */
+export const dotDate = (iso: string) => { const [y, m, d] = iso.split("-").map(Number); return `${y}.${m}.${d}`; };
+/** 9월 13일 월요일 */
+export const longDate = (iso: string) => { const d = parse(iso); return `${d.getMonth() + 1}월 ${d.getDate()}일 ${WD[d.getDay()]}요일`; };
+/** 2027.9.11(토) */
+export const dotDateWd = (iso: string) => `${dotDate(iso)}(${WD[dow(iso)]})`;
+/** 9.19(일) */
+export const shortDateWd = (iso: string) => { const d = parse(iso); return `${d.getMonth() + 1}.${d.getDate()}(${WD[d.getDay()]})`; };
