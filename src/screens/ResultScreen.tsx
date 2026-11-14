@@ -9,8 +9,8 @@ import { Badge, Back, Card, DayCell, SmallButton, Toast, Check, Plus, type DayKi
 const WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 const dot = (s: string) => s.replace(/-/g, ".");
 
-export default function ResultScreen({ cond, results, onBack, onEditRange }:
-  { cond: SearchCondition; results: Recommendation[]; onBack: () => void; onEditRange: () => void }) {
+export default function ResultScreen({ cond, results, onBack, onEditRange, onSelect }:
+  { cond: SearchCondition; results: Recommendation[]; onBack: () => void; onEditRange: () => void; onSelect?: (r: Recommendation) => void }) {
   const [focusId, setFocusId] = useState(results[0].id);
   const [picked, setPicked] = useState<string[]>([]);
   const [month, setMonth] = useState(ym(results[0].start));
@@ -114,6 +114,29 @@ export default function ResultScreen({ cond, results, onBack, onEditRange }:
         })}
       </div>
       <p className="note">공휴일은 고정 날짜만 반영한 예시예요. 실제 데이터는 연동 예정입니다.</p>
+
+      {/* 이 일정 선택 CTA */}
+      {onSelect && (
+        <div className="screen__cta">
+          {picked.length > 0 ? (
+            <button
+              type="button"
+              className="ui-btn"
+              onClick={() => {
+                const first = results.find((r) => picked[0] === r.id);
+                if (first) onSelect(first);
+              }}
+            >
+              이 일정 선택하기 ({picked.length}개)
+            </button>
+          ) : (
+            <button type="button" className="ui-btn ui-btn--ghost" disabled>
+              담기 버튼으로 일정을 선택해 주세요
+            </button>
+          )}
+        </div>
+      )}
+
       {toast && <div className="toast-wrap"><Toast message={toast} onClose={() => setToast(undefined)} /></div>}
     </div>
   );
