@@ -28,3 +28,6 @@ body { margin: 0; background: var(--bg); color: var(--grey-900); font: var(--t-b
 .card__flow b { font: var(--t-h4); color: var(--grey-900); }
 .card__flow i { color: var(--grey-400); font-style: normal; }
 .footer { color: var(--grey-600); font: var(--t-caption); padding: 0 4px; }
+.error { margin: 0; color: var(--red-500); font: var(--t-body-3); }
+.ui-field[aria-invalid="true"] { box-shadow: inset 0 0 0 1.5px var(--red-500); }
+.sample-note { margin: 0; padding: 10px 12px; border-radius: var(--r-input); background: var(--grey-100); color: var(--grey-700); font: var(--t-caption); }

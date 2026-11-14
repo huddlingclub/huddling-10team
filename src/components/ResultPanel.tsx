@@ -15,6 +15,8 @@ export default function ResultPanel({ results }: Props) {
           <p>조건을 입력하고 계산하기를 누르면 결과가 여기에 나타나요.</p>
         </div>
       ) : (
+        <>
+        <p className="sample-note">와이어프레임 예시 결과예요. 실제 추천이 아닙니다.</p>
         <ul className="cards">
           {results.map((r, i) => (
             <li key={r.id}>
@@ -36,6 +38,7 @@ export default function ResultPanel({ results }: Props) {
             </li>
           ))}
         </ul>
+        </>
       )}
     </section>
   );
