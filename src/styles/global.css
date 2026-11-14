@@ -1,0 +1,44 @@
+:root {
+  --ink: #111;
+  --mute: #666;
+  --line: #ccc;
+  --bg: #fafafa;
+  --panel: #fff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Pretendard", -apple-system, "Noto Sans KR", sans-serif;
+}
+.page { max-width: 720px; margin: 0 auto; padding: 24px 16px 64px; }
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 2px solid var(--ink); }
+.header__brand { display: flex; align-items: center; gap: 12px; font-size: 22px; }
+.header__tag { color: var(--mute); font-size: 13px; }
+.logo-ph, .illust-ph { display: grid; place-items: center; border: 1px dashed #999; background: #f0f0f0; color: var(--mute); font-size: 12px; }
+.logo-ph { width: 44px; height: 44px; }
+.illust-ph { width: 160px; height: 120px; margin: 0 auto 16px; }
+.hero { margin: 40px 0 28px; }
+.hero h1 { margin: 0 0 8px; font-size: 32px; line-height: 1.25; }
+.hero p { margin: 0; color: var(--mute); }
+.panel { background: var(--panel); border: 2px solid var(--ink); padding: 28px; margin-bottom: 24px; }
+.step { display: block; margin-bottom: 20px; color: var(--mute); font-size: 14px; }
+.field { margin-bottom: 24px; }
+.label { display: block; margin-bottom: 8px; font-weight: 700; }
+.row { display: flex; align-items: center; gap: 10px; }
+input[type="number"], input[type="date"] { flex: 1; min-width: 0; padding: 12px; border: 1px solid #999; background: #fff; font: inherit; }
+.radio-group { display: grid; gap: 12px; }
+.radio-card { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border: 2px solid #ddd; cursor: pointer; }
+.radio-card.is-on { border-color: var(--ink); background: #f5f5f5; }
+.radio-card span { display: grid; gap: 4px; }
+.radio-card small { color: var(--mute); }
+.btn { width: 100%; padding: 16px; background: var(--ink); color: #fff; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
+.empty { text-align: center; padding: 24px 0; color: var(--mute); }
+.cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.card { display: grid; gap: 4px; padding: 16px; border: 1px solid var(--line); }
+.card small { color: var(--mute); }
+.footer { color: var(--mute); font-size: 12px; }
+@media (min-width: 720px) {
+  .radio-group { grid-template-columns: 1fr 1fr; }
+}
