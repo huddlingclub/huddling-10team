@@ -88,7 +88,9 @@ button { font-family: inherit; }
 .card__flow b { font: var(--t-h4); color: var(--grey-900); }
 .card__flow i { color: var(--grey-400); font-style: normal; }
 .grow { flex: 1; }
-[role="button"] { cursor: pointer; }
+.rec { cursor: pointer; }
+.card__focus { padding: 0; border: 0; background: none; text-align: left; color: inherit; cursor: pointer; }
+.card__focus:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 4px; border-radius: 4px; }
 .note { margin: 0; color: var(--grey-600); font: var(--t-caption); }
 .toast-wrap { position: fixed; left: 0; right: 0; bottom: 32px; display: flex; justify-content: center; pointer-events: none; }
 

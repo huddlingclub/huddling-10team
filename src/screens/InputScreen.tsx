@@ -11,7 +11,7 @@ const label = (s: string) => `${s.slice(0, 4)}년 ${Number(s.slice(5))}월`;
 
 /** 시작일: 이번 달이면 오늘, 아니면 1일. 종료일: 선택한 달의 말일 */
 export const toRange = (v: InputValue) => ({
-  start: v.startMonth === ym(today()) ? today() : `${v.startMonth}-01`,
+  start: !v.startMonth ? "" : v.startMonth === ym(today()) ? today() : `${v.startMonth}-01`,
   end: v.endMonth ? monthEnd(v.endMonth) : "",
 });
 

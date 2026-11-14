@@ -91,14 +91,14 @@ export default function ResultScreen({ cond, results, onBack, onEditRange }:
         {results.map((r) => {
           const on = picked.includes(r.id);
           return (
-            <div key={r.id} onClick={() => focus(r)} role="button" tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && focus(r)}>
+            <div key={r.id} className="rec" onClick={() => focus(r)}>
               <Card focus={r.id === focusId}>
                 <div className="card__head">
-                  <div>
+                  <button type="button" className="card__focus" aria-pressed={r.id === focusId}
+                    onClick={(e) => { e.stopPropagation(); focus(r); }}>
                     <h3>{r.title}</h3>
                     <p className="card__sub">{fmt(r.start)} ~ {fmt(r.end)}</p>
-                  </div>
+                  </button>
                   <Badge>효율 {(r.totalDays / r.leaveUsed).toFixed(1)}배</Badge>
                 </div>
                 <div className="card__flow">
