@@ -68,7 +68,7 @@ export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Pro
         <button type="button" className="ui-btn ui-btn--white" onClick={onBack}>다른 일정 고르기</button>
         <Button onClick={() => { onConfirm?.(); setSaved(true); }}>확인</Button>
       </div>
-      {saved && <SavedModal recommendation={rec} leaveDays={available} onClose={() => setSaved(false)} />}
+      {saved && <SavedModal recommendations={[rec]} leaveDays={available} onClose={() => setSaved(false)} />}
       {toast && <div className="toast-wrap"><Toast message={toast} onClose={() => setToast(undefined)} /></div>}
     </div>
   );

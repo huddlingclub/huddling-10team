@@ -56,15 +56,12 @@
 .ui-toast { background: var(--grey-900); color: #fff; padding: 14px 20px; border-radius: 14px; font: var(--t-body-2); box-shadow: var(--shadow-toast); animation: ui-toast var(--t-enter) var(--ease); }
 @keyframes ui-toast { from { opacity: 0; transform: translateY(8px); } }
 
-.ui-cell { position: relative; height: 60px; display: flex; flex-direction: column; align-items: center; }
-.ui-cell__band { position: absolute; top: 4px; left: 0; right: 0; height: 34px; background: var(--blue-50); }
-.ui-cell__num { position: relative; margin-top: 4px; width: 34px; height: 34px; display: grid; place-items: center; font-size: 15px; border-radius: 17px; }
-.ui-cell__label { position: relative; font: 500 11px var(--font); color: var(--grey-600); }
-.ui-cell--sat .ui-cell__num { color: var(--blue-500); font-weight: 600; }
-.ui-cell--holiday .ui-cell__num, .ui-cell--holiday .ui-cell__label { color: var(--red-500); }
-.ui-cell--leave .ui-cell__num { background: var(--blue-500); color: #fff; font-weight: 700; font-size: 16px; }
-.ui-cell--leave .ui-cell__label { color: var(--blue-600); font-weight: 600; }
-.ui-cell--sun .ui-cell__num { color: var(--red-500); }
-.ui-cell--holiday .ui-cell__num { font-weight: 600; }
-.ui-cell--leave.ui-cell--leave .ui-cell__num { color: #fff; }
 .ui-btn--white { background: #fff; color: var(--grey-800); font-size: 16px; flex: 1; }
+
+.dcell { flex: 1; min-width: 0; height: 44px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap; background: var(--grey-100); }
+.dcell__num { font: 700 14px/18px var(--font); }
+.dcell__wd { font: 500 10px/13px var(--font); }
+.dcell--out { background: var(--grey-50); color: var(--grey-400); }
+.dcell--sat { color: var(--blue-500); }
+.dcell--holiday { color: var(--red-500); }
+.dcell--leave { background: var(--blue-500); color: #fff; }
