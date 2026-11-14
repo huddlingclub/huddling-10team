@@ -64,3 +64,6 @@
 .ui-cell--holiday .ui-cell__num, .ui-cell--holiday .ui-cell__label { color: var(--red-500); }
 .ui-cell--leave .ui-cell__num { background: var(--blue-500); color: #fff; font-weight: 700; font-size: 16px; }
 .ui-cell--leave .ui-cell__label { color: var(--blue-600); font-weight: 600; }
+.ui-cell--sun .ui-cell__num { color: var(--red-500); }
+.ui-cell--holiday .ui-cell__num { font-weight: 600; }
+.ui-cell--leave.ui-cell--leave .ui-cell__num { color: #fff; }

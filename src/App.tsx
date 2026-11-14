@@ -1,46 +1,55 @@
-import { useState } from "react";
-import Header from "./components/Header";
-import Hero from "./components/Hero";
-import InputForm from "./components/InputForm";
-import ResultPanel from "./components/ResultPanel";
-import { addDays, diffDays } from "./lib/date";
-import type { Recommendation, SearchCondition } from "./types/recommendation";
+import { useCallback, useMemo, useState } from "react";
+import { endOfThisYear, today, ym } from "./lib/date";
+import { sampleRecommend } from "./lib/sampleRecommend";
+import AvoidScreen from "./screens/AvoidScreen";
+import EmptyScreen from "./screens/EmptyScreen";
+import InputScreen, { toRange, type InputValue } from "./screens/InputScreen";
+import LoadingScreen from "./screens/LoadingScreen";
+import ResultScreen from "./screens/ResultScreen";
+import StyleScreen from "./screens/StyleScreen";
+import type { SearchCondition, VacationStyle } from "./types/recommendation";
 
-// TODO: api/holidays + lib/recommend 연결 전까지 쓰는 임시 결과.
-// 날짜는 고정값이 아니라 입력한 기간 안에서 계산해 만든다 (실제 추천이 아님).
-function makeSample(c: SearchCondition): Recommendation[] {
-  const span = diffDays(c.start, c.end) + 1; // 기간 일수
-  const make = (id: string, offset: number, length: number): Recommendation | null => {
-    const len = Math.min(length, span - offset);
-    if (len < 1) return null;
-    const start = addDays(c.start, offset);
-    return {
-      id,
-      start,
-      end: addDays(start, len - 1),
-      leaveUsed: Math.min(c.leaveDays, len),
-      totalDays: len,
-      holidayNames: ["예시 연휴"],
-    };
-  };
-  const len1 = c.leaveDays + 4;
-  return [make("1", 0, len1), make("2", len1 + 7, Math.max(3, Math.floor(len1 / 2)))].filter(
-    (r): r is Recommendation => r !== null,
-  );
-}
+type Screen = "input" | "style" | "avoid" | "loading" | "result";
 
 export default function App() {
-  const [results, setResults] = useState<Recommendation[] | null>(null);
+  const [screen, setScreen] = useState<Screen>("input");
+  const [input, setInput] = useState<InputValue>({
+    leaveDays: 15,
+    startMonth: ym(today()), // 시작일 기본값: 오늘
+    endMonth: ym(endOfThisYear()), // 종료일 기본값: 올해 12월 31일
+  });
+  const [style, setStyle] = useState<VacationStyle>("bulk");
+  const [avoid, setAvoid] = useState<string[]>([]);
+
+  const cond: SearchCondition = useMemo(
+    () => ({ leaveDays: input.leaveDays, ...toRange(input), style, avoidMonths: avoid }),
+    [input, style, avoid],
+  );
+  // TODO: lib/sampleRecommend → 실제 공휴일 API + 추천 알고리즘으로 교체
+  const results = useMemo(() => sampleRecommend(cond), [cond]);
+  const done = useCallback(() => setScreen("result"), []);
 
   return (
-    <div className="page">
-      <Header />
-      <Hero />
-      <InputForm onSubmit={(c) => setResults(makeSample(c))} />
-      <ResultPanel results={results} />
-      <footer className="footer">
-        공휴일 데이터: 공공데이터포털 특일 정보 API (예정) · 와이어프레임이므로 결과는 예시 데이터입니다.
-      </footer>
+    <div className="app">
+      {screen === "input" && (
+        <InputScreen value={input} onNext={(v) => { setInput(v); setScreen("style"); }} />
+      )}
+      {screen === "style" && (
+        <StyleScreen value={style} onBack={() => setScreen("input")} onNext={(s) => { setStyle(s); setScreen("avoid"); }} />
+      )}
+      {screen === "avoid" && (
+        <AvoidScreen startMonth={input.startMonth} endMonth={input.endMonth} value={avoid}
+          onBack={() => setScreen("style")} onNext={(a) => { setAvoid(a); setScreen("loading"); }} />
+      )}
+      {screen === "loading" && <LoadingScreen onDone={done} />}
+      {screen === "result" &&
+        (results.length ? (
+          <ResultScreen key={JSON.stringify(cond)} cond={cond} results={results}
+            onBack={() => setScreen("avoid")} onEditRange={() => setScreen("input")} />
+        ) : (
+          <EmptyScreen cond={cond} onBack={() => setScreen("avoid")}
+            onEditRange={() => setScreen("input")} onEditAvoid={() => setScreen("avoid")} />
+        ))}
     </div>
   );
 }
