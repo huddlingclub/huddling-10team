@@ -1,11 +1,11 @@
 // 화면이 부르는 진입 함수: 입력 조건 + 공휴일 → 추천 목록 + 요약
-//   길게 한 번 몰아서(bulk)  → 몰아쓰기: 길게 쉬는 구간 상위 3개 (서로 택1)
+//   길게 한 번 몰아서(bulk)  → 몰아쓰기: 길게 쉬는 구간 상위 4개 = 1위 카드 + 다른 추천 3개 (서로 택1)
 //   짧게 자주(short)         → 나눠쓰기: 연차 1개 단위 자리들의 조합 (전부 함께 사용)
 // ※ 기획에서 balanced 스타일은 빠졌다. 값이 들어오면 몰아쓰기로 처리한다.
 import type { Holiday, Plan, PlanParams } from "../types/plan";
 import type { Recommendation, SearchCondition } from "../types/recommendation";
 import { buildCandidates } from "./buildCandidates";
-import { recommendCombined } from "./recommend";
+import { COMBINED_TOP, recommendCombined } from "./recommend";
 import { recommendSplit } from "./recommendSplit";
 import { toRecommendation } from "./toRecommendation";
 
@@ -31,8 +31,6 @@ export interface RecommendResult {
    */
   summary: RecommendSummary;
 }
-
-const COMBINED_TOP = 3; // recommend.ts 의 COMBINED_TOP 과 같은 값 (몰아쓰기 추천 개수)
 
 export function recommendByStyle(cond: SearchCondition, holidays: Holiday[]): RecommendResult {
   const params: PlanParams = { leaveCount: cond.leaveDays, from: cond.start, to: cond.end, holidays };

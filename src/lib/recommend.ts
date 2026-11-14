@@ -1,9 +1,9 @@
-// 몰아쓰기 베스트: 연차 N개 이하로 가장 길게 이어 쉬는 구간을, 겹치지 않게 상위 3개.
+// 몰아쓰기 베스트: 연차 N개 이하로 가장 길게 이어 쉬는 구간을, 겹치지 않게 상위 4개. (결과 화면: 1위 카드 + 다른 추천 3개)
 // 정렬: 쉬는 날 많은 순 → 연차 적은 순 → 빠른 날짜 순
 import type { CombinedSummary, Plan, PlanParams, RankedPlan } from "../types/plan";
 import { addDays } from "./date";
 
-const COMBINED_TOP = 3;
+export const COMBINED_TOP = 4;
 
 const inRange = (p: Plan, params: PlanParams) => p.start >= params.from && p.end <= params.to;
 
