@@ -1,6 +1,6 @@
 // 화면이 부르는 진입 함수: 입력 조건 + 공휴일 → 추천 목록 + 요약
 //   길게 한 번 몰아서(bulk)  → 몰아쓰기: 길게 쉬는 구간 상위 4개 = 1위 카드 + 다른 추천 3개 (서로 택1)
-//   짧게 자주(short)         → 나눠쓰기: 연차 1개 단위 자리들의 조합 (전부 함께 사용)
+//   짧게 자주(short)         → 나눠쓰기: 공휴일 연휴에 연차 1개씩 붙이는 자리들의 조합 (전부 함께 사용, 남는 연차는 반대편에 1개 더)
 // ※ 기획에서 balanced 스타일은 빠졌다. 값이 들어오면 몰아쓰기로 처리한다.
 import type { Holiday, Plan, PlanParams } from "../types/plan";
 import type { Recommendation, SearchCondition } from "../types/recommendation";
