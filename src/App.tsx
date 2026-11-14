@@ -1,107 +1,55 @@
-import { useState } from "react";
-import Header from "./components/Header";
-import Hero from "./components/Hero";
-import InputForm from "./components/InputForm";
-import ResultScreen from "./components/ResultScreen";
-import ConfirmScreen from "./components/ConfirmScreen";
-import SavedModal from "./components/SavedModal";
-import type { Recommendation, SearchCondition } from "./types/recommendation";
+import { useCallback, useMemo, useState } from "react";
+import { endOfThisYear, today, ym } from "./lib/date";
+import { sampleRecommend } from "./lib/sampleRecommend";
+import AvoidScreen from "./screens/AvoidScreen";
+import EmptyScreen from "./screens/EmptyScreen";
+import InputScreen, { toRange, type InputValue } from "./screens/InputScreen";
+import LoadingScreen from "./screens/LoadingScreen";
+import ResultScreen from "./screens/ResultScreen";
+import StyleScreen from "./screens/StyleScreen";
+import type { SearchCondition, VacationStyle } from "./types/recommendation";
 
-type Screen = "home" | "result" | "confirm" | "saved";
-
-// TODO: api/holidays + lib/recommend 연결. 지금은 와이어프레임용 예시 데이터.
-const SAMPLE: Recommendation[] = [
-  {
-    id: "1",
-    start: "2027.9.11(토)",
-    end: "2027.9.19(일)",
-    leaveUsed: 2,
-    totalDays: 9,
-    holidayNames: ["추석"],
-    label: "추석",
-    leaveDates: ["2027-09-13", "2027-09-17"],
-    holidayDates: ["2027-09-14", "2027-09-15", "2027-09-16"],
-  },
-  {
-    id: "2",
-    start: "2027.5.1(토)",
-    end: "2027.5.5(수)",
-    leaveUsed: 2,
-    totalDays: 5,
-    holidayNames: ["어린이날"],
-    label: "어린이날",
-    leaveDates: ["2027-05-03", "2027-05-04"],
-    holidayDates: ["2027-05-05"],
-  },
-  {
-    id: "3",
-    start: "2027.5.13(목)",
-    end: "2027.5.16(일)",
-    leaveUsed: 1,
-    totalDays: 4,
-    holidayNames: ["부처님오신날"],
-    label: "부처님오신날",
-    leaveDates: ["2027-05-13"],
-    holidayDates: ["2027-05-15"],
-  },
-];
+type Screen = "input" | "style" | "avoid" | "loading" | "result";
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("home");
-  const [condition, setCondition] = useState<SearchCondition | null>(null);
-  const [selected, setSelected] = useState<Recommendation | null>(null);
+  const [screen, setScreen] = useState<Screen>("input");
+  const [input, setInput] = useState<InputValue>({
+    leaveDays: 15,
+    startMonth: ym(today()), // 시작일 기본값: 오늘
+    endMonth: ym(endOfThisYear()), // 종료일 기본값: 올해 12월 31일
+  });
+  const [style, setStyle] = useState<VacationStyle>("bulk");
+  const [avoid, setAvoid] = useState<string[]>([]);
 
-  const handleSubmit = (c: SearchCondition) => {
-    setCondition(c);
-    setScreen("result");
-  };
-
-  const handleSelect = (r: Recommendation) => {
-    setSelected(r);
-    setScreen("confirm");
-  };
-
-  const handleSave = () => {
-    setScreen("saved");
-  };
-
-  if (screen === "result" && condition) {
-    return (
-      <ResultScreen
-        leaveDays={condition.leaveDays}
-        results={SAMPLE}
-        onSelect={handleSelect}
-        onBack={() => setScreen("home")}
-      />
-    );
-  }
-
-  if (screen === "confirm" && selected && condition) {
-    return (
-      <ConfirmScreen
-        recommendation={selected}
-        leaveDays={condition.leaveDays}
-        onSave={handleSave}
-        onBack={() => setScreen("result")}
-      />
-    );
-  }
+  const cond: SearchCondition = useMemo(
+    () => ({ leaveDays: input.leaveDays, ...toRange(input), style, avoidMonths: avoid }),
+    [input, style, avoid],
+  );
+  // TODO: lib/sampleRecommend → 실제 공휴일 API + 추천 알고리즘으로 교체
+  const results = useMemo(() => sampleRecommend(cond), [cond]);
+  const done = useCallback(() => setScreen("result"), []);
 
   return (
-    <div className="page">
-      <Header />
-      <Hero />
-      <InputForm onSubmit={handleSubmit} />
-      {screen === "saved" && selected && condition && (
-        <SavedModal
-          recommendation={selected}
-          leaveDays={condition.leaveDays}
-          onClose={() => setScreen("home")}
-        />
+    <div className="app">
+      {screen === "input" && (
+        <InputScreen value={input} onNext={(v) => { setInput(v); setScreen("style"); }} />
       )}
-      <footer className="footer">
-        공휴일 데이터: 공공데이터포털 특일 정보 API (예정) · 와이어프레임이므로 결과는 예시 데이터입니다.
-      </footer>
+      {screen === "style" && (
+        <StyleScreen value={style} onBack={() => setScreen("input")} onNext={(s) => { setStyle(s); setScreen("avoid"); }} />
+      )}
+      {screen === "avoid" && (
+        <AvoidScreen startMonth={input.startMonth} endMonth={input.endMonth} value={avoid}
+          onBack={() => setScreen("style")} onNext={(a) => { setAvoid(a); setScreen("loading"); }} />
+      )}
+      {screen === "loading" && <LoadingScreen onDone={done} />}
+      {screen === "result" &&
+        (results.length ? (
+          <ResultScreen key={JSON.stringify(cond)} cond={cond} results={results}
+            onBack={() => setScreen("avoid")} onEditRange={() => setScreen("input")} />
+        ) : (
+          <EmptyScreen cond={cond} onBack={() => setScreen("avoid")}
+            onEditRange={() => setScreen("input")} onEditAvoid={() => setScreen("avoid")} />
+        ))}
     </div>
   );
 }
