@@ -2,7 +2,7 @@
 // 실제 공휴일은 holidays API(담당자 별도), 실제 알고리즘은 lib/recommend 담당자가 대체한다.
 // 여기서는 날짜가 고정된 공휴일만 사용한다 (설날·추석·대체공휴일 제외).
 import type { Recommendation, SearchCondition } from "../types/recommendation";
-import { addDays, diffDays, isWeekend, ym } from "./date";
+import { addDays, diffDays, isWeekend } from "./date";
 
 const FIXED: Record<string, string> = {
   "01-01": "신정", "03-01": "삼일절", "05-05": "어린이날", "06-06": "현충일",
@@ -12,8 +12,8 @@ const FIXED: Record<string, string> = {
 export const holidayName = (iso: string): string | undefined => FIXED[iso.slice(5)];
 export const isOff = (iso: string) => isWeekend(iso) || !!holidayName(iso);
 
-const LEN_BY_STYLE = { bulk: [7, 11], balanced: [4, 6], short: [3, 4] } as const;
-const MAX_LEAVE_BY_STYLE = { bulk: 99, balanced: 3, short: 2 } as const;
+const LEN_BY_STYLE = { bulk: [4, 11], short: [3, 4] } as const; // 길게: 4일 이상 / 짧게: 3~4일
+const MAX_LEAVE_BY_STYLE = { bulk: 99, short: 2 } as const; // 짧게: 연차 1~2개
 
 export function sampleRecommend(c: SearchCondition): Recommendation[] {
   const span = diffDays(c.start, c.end) + 1;
@@ -27,13 +27,13 @@ export function sampleRecommend(c: SearchCondition): Recommendation[] {
       const days = Array.from({ length: len }, (_, i) => addDays(s, i));
       const e = days[len - 1];
       if (!isOff(e)) continue;
-      if (days.some((d) => c.avoidMonths.includes(ym(d)))) continue;
       const leaveDates = days.filter((d) => !isOff(d));
+      const holidayDates = days.filter((d) => !!holidayName(d));
       const names = [...new Set(days.map(holidayName).filter((n): n is string => !!n))];
       if (!leaveDates.length || leaveDates.length > Math.min(c.leaveDays, MAX_LEAVE_BY_STYLE[c.style]) || !names.length) continue;
       cands.push({
         id: `${s}`, title: `${names[0]} 연휴`, start: s, end: e,
-        leaveUsed: leaveDates.length, totalDays: len, leaveDates, holidayNames: names,
+        leaveUsed: leaveDates.length, totalDays: len, leaveDates, holidayNames: names, holidayDates,
       });
     }
   }
@@ -46,4 +46,14 @@ export function sampleRecommend(c: SearchCondition): Recommendation[] {
     if (picked.length >= 5) break;
   }
   return picked; // 효율 높은 순
+}
+
+/** year 해 안에서, 조회 기간에 포함되는 (고정일) 공휴일 수 — 로딩 화면 안내용 */
+export function countHolidaysInYear(c: { start: string; end: string }, year: number): number {
+  const from = c.start > `${year}-01-01` ? c.start : `${year}-01-01`;
+  const to = c.end < `${year}-12-31` ? c.end : `${year}-12-31`;
+  if (from > to) return 0;
+  let n = 0;
+  for (let d = from, i = 0; d <= to && i < 400; d = addDays(d, 1), i++) if (holidayName(d)) n++;
+  return n;
 }
