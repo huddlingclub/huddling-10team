@@ -9,6 +9,9 @@ import { Button } from "../ui";
 
 export interface InputValue { leaveDays: number; startMonth: string; endMonth: string }
 
+/** 공휴일 데이터가 있는 마지막 해 (공휴일 데이터 파일을 추가하면 함께 올린다) */
+export const LAST_SELECTABLE_YEAR = 2027;
+
 const label = (s: string) => `${s.slice(0, 4)}년 ${Number(s.slice(5))}월`;
 
 /** 시작일: 이번 달이면 오늘, 아니면 1일. 종료일: 선택한 달의 말일 (월을 비우면 빈 문자열) */
@@ -20,7 +23,8 @@ export const toRange = (v: InputValue) => ({
 export default function InputScreen({ value, onNext }: { value: InputValue; onNext: (v: InputValue) => void }) {
   const [v, setV] = useState(value);
   const [error, setError] = useState<string>();
-  const options = monthsFromNow(25); // 렌더마다 계산해 달이 바뀌어도 목록이 어긋나지 않게 한다
+  // 렌더마다 계산해 달이 바뀌어도 목록이 어긋나지 않게 하고, 공휴일 데이터가 없는 해는 고를 수 없게 한다
+  const options = monthsFromNow(25).filter((m) => Number(m.slice(0, 4)) <= LAST_SELECTABLE_YEAR);
 
   const check = (next: InputValue) => {
     const errs = validate({ ...toRange(next), leaveDays: next.leaveDays, style: "bulk" });
