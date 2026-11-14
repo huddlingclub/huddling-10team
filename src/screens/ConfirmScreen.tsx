@@ -14,10 +14,12 @@ interface Props {
   /** 이 계획을 적용하기 전에 남아 있던 연차 */
   available: number;
   onBack: () => void;
+  /** 저장 완료 모달의 "계속 확인하기" → 첫 화면으로 */
+  onHome?: () => void;
   onConfirm?: () => void;
 }
 
-export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Props) {
+export default function ConfirmScreen({ rec, available, onBack, onConfirm, onHome }: Props) {
   const [toast, setToast] = useState<string>();
   const [saved, setSaved] = useState(false);
   useEffect(() => {
@@ -68,7 +70,7 @@ export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Pro
         <button type="button" className="ui-btn ui-btn--white" onClick={onBack}>다른 일정 고르기</button>
         <Button onClick={() => { onConfirm?.(); setSaved(true); }}>확인</Button>
       </div>
-      {saved && <SavedModal recommendations={[rec]} leaveDays={available} onClose={() => setSaved(false)} />}
+      {saved && <SavedModal recommendations={[rec]} leaveDays={available} onClose={() => setSaved(false)} onContinue={onHome} />}
       {toast && <div className="toast-wrap"><Toast message={toast} onClose={() => setToast(undefined)} /></div>}
     </div>
   );

@@ -8,10 +8,12 @@ interface Props {
   /** 이 계획을 적용하기 전 남은 연차 */
   leaveDays: number;
   onClose: () => void;
+  /** "계속 확인하기"를 눌렀을 때 (첫 화면으로 이동). 없으면 onClose 와 같다 */
+  onContinue?: () => void;
 }
 
 /** 저장 완료 모달 ("계획을 저장했어요") */
-export default function SavedModal({ recommendations: recs, leaveDays, onClose }: Props) {
+export default function SavedModal({ recommendations: recs, leaveDays, onClose, onContinue }: Props) {
   const single = recs.length === 1;
   const r = recs[0];
   const used = recs.reduce((a, x) => a + x.leaveUsed, 0);
@@ -20,10 +22,11 @@ export default function SavedModal({ recommendations: recs, leaveDays, onClose }
   const [closing, setClosing] = useState(false);
 
   // 퇴장 모션(180ms)이 끝난 뒤에 실제로 닫는다
-  const close = useCallback(() => {
+  const closeWith = useCallback((done: () => void) => {
     setClosing(true);
-    setTimeout(onClose, 180);
-  }, [onClose]);
+    setTimeout(done, 180);
+  }, []);
+  const close = useCallback(() => closeWith(onClose), [closeWith, onClose]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
@@ -43,7 +46,7 @@ export default function SavedModal({ recommendations: recs, leaveDays, onClose }
             <img src={external} width={13} height={13} alt="" />
           </a>
         )}
-        <button type="button" className="modal__close" onClick={close}>계속 확인하기</button>
+        <button type="button" className="modal__close" onClick={() => closeWith(onContinue ?? onClose)}>계속 확인하기</button>
         <p className="modal__notice">회사 연차 신청은 별도로 진행해주세요.</p>
       </div>
     </div>
