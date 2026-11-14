@@ -16,7 +16,7 @@ export default function LeaveStepper({ value, onChange, min = 0, max = 30 }: Pro
         onClick={() => onChange(value - 1)}>
         <img src={minus} width={20} height={20} alt="" />
       </button>
-      <span className="lstep__value" aria-live="polite">{value}<small>개</small></span>
+      <span className="lstep__value" aria-live="polite"><span key={value} className="lstep__num">{value}</span><small>개</small></span>
       <button type="button" className="lstep__btn lstep__btn--add" aria-label="연차 늘리기" disabled={value >= max}
         onClick={() => onChange(value + 1)}>
         <img src={plus} width={20} height={20} alt="" />
