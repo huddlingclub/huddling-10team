@@ -5,10 +5,30 @@
 import type { CellType, Plan, PlanDay, PlanParams } from "../types/plan";
 import { buildDays, type CalendarDay } from "./calendar";
 
-function makeLabel(names: string[]): string {
+// 추천 제목 규칙 (공휴일 이름을 이어 붙이지 않고 대표 연휴 이름 하나로 정리한다)
+//  1) "대체공휴일(X)" → X, "임시공휴일(…)" → 임시공휴일, "설날/설날 연휴" → 설, "추석/추석 연휴" → 추석
+//  2) 설·추석이 있으면 그 연휴가 대표, 아니면 구간 안에서 가장 늦게 나오는 공휴일이 대표
+//     (예: 노동절·대체공휴일(노동절)·어린이날 → "어린이날 연휴")
+//  3) "대표 이름 + 연휴". 공휴일이 하나도 없으면 "주말 연결"
+const MAJOR = ["설", "추석"];
+
+function baseName(raw: string): string {
+  let n = raw;
+  const sub = n.match(/^대체공휴일\((.+)\)$/);
+  if (sub) n = sub[1];
+  if (/^임시공휴일/.test(n)) return "임시공휴일";
+  if (/^설(날)?( 연휴)?$/.test(n)) return "설";
+  if (/^추석( 연휴)?$/.test(n)) return "추석";
+  return n;
+}
+
+export function makeLabel(names: string[]): string {
   if (!names.length) return "주말 연결";
-  if (names.length <= 3) return names.join(" · ");
-  return `${names.slice(0, 2).join(" · ")} 외 ${names.length - 2}`;
+  const bases = names.map(baseName);
+  const named = bases.filter((b) => b !== "대체공휴일"); // 이름 없는 "대체공휴일"은 다른 이름이 있으면 무시
+  const pool = named.length ? named : bases;
+  const rep = pool.find((b) => MAJOR.includes(b)) ?? pool[pool.length - 1];
+  return `${rep} 연휴`;
 }
 
 export function toCard(days: CalendarDay[], i: number, j: number, leave: number): Plan {
@@ -37,7 +57,7 @@ export function toCard(days: CalendarDay[], i: number, j: number, leave: number)
 }
 
 // 연차 1~maxLeave개를 쓰는 "끝까지 늘린" 구간을 전부 만든다.
-// (requireHoliday가 true면 공휴일이 낀 구간만)
+// requireHoliday가 true면 공휴일이 낀 구간만 만든다 (나눠쓰기), false면 주말만 이은 구간도 만든다 (몰아쓰기).
 function makeWindows(days: CalendarDay[], maxLeave: number, requireHoliday: boolean): Plan[] {
   const out: Plan[] = [];
   const last = days.length - 1;
@@ -67,7 +87,7 @@ export function buildCandidates(params: PlanParams): { combined: Plan[]; split: 
   if (!(N >= 1) || !days.length) return { combined: [], split: [] };
   return {
     combined: makeWindows(days, N, false),
-    // 나눠쓰기: 연차를 1개씩 쪼개서, 공휴일/주말 어디에 붙이면 이득인지만 본다 (공휴일이 없어도 주말에 붙이는 건 허용)
-    split: makeWindows(days, 1, false),
+    // 나눠쓰기: 연차 1개로 만드는 공휴일 연휴만 후보 (공휴일이 없는 주말 연결은 제외 — 기획 기준)
+    split: makeWindows(days, 1, true),
   };
 }
