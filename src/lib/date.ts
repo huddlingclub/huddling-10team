@@ -64,3 +64,7 @@ export const longDate = (iso: string) => { const d = parse(iso); return `${d.get
 export const dotDateWd = (iso: string) => `${dotDate(iso)}(${WD[dow(iso)]})`;
 /** 9.19(일) */
 export const shortDateWd = (iso: string) => { const d = parse(iso); return `${d.getMonth() + 1}.${d.getDate()}(${WD[d.getDay()]})`; };
+
+/** 9.13 (요일 없이 월.일) */
+export const md = (iso: string) => { const [, m, d] = iso.split("-").map(Number); return `${m}.${d}`; };
+export const weekdayOf = (iso: string) => WD[dow(iso)];

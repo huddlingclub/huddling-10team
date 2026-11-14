@@ -60,12 +60,12 @@ export const Card = ({ focus, children }: { focus?: boolean; children: ReactNode
   <article className={`ui-card ${focus ? "ui-card--focus" : ""}`}>{children}</article>
 );
 
-export type DayKind = "weekday" | "sat" | "sun" | "holiday" | "leave";
-export const DayCell = ({ day, kind, label, band }: { day: number; kind: DayKind; label?: string; band?: boolean }) => (
-  <div className={`ui-cell ui-cell--${kind}`}>
-    {band && <span className="ui-cell__band" />}
-    <span className="ui-cell__num">{day}</span>
-    <span className="ui-cell__label">{label ?? "\u00a0"}</span>
+/** Figma Cell/Day — out: 범위 밖 · sat: 쉬는 토요일 · holiday: 쉬는 공휴일/일요일 · leave: 연차 */
+export type DayKind = "out" | "sat" | "holiday" | "leave";
+export const DayCell = ({ day, weekday, kind }: { day: number; weekday: string; kind: DayKind }) => (
+  <div className={`dcell dcell--${kind}`}>
+    <span className="dcell__num">{day}</span>
+    <span className="dcell__wd">{weekday}</span>
   </div>
 );
 
