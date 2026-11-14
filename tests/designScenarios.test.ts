@@ -90,8 +90,8 @@ describe("2026-11-14 부터 보는 서비스 시작 시점", () => {
     const r = recommendByStyle({ leaveDays: 3, start, end, style: "short", avoidMonths: [] }, getHolidays(start, end));
     const xmas = r.items.find((i) => i.holidayNames.includes("성탄절"));
     expect(xmas?.start).toBe("2026-12-24");
-    expect(xmas?.end).toBe("2026-12-27");
-    expect(xmas?.totalDays).toBe(4);
+    expect(xmas?.end).toBe("2026-12-28");
+    expect(xmas?.totalDays).toBe(5);
   });
 });
 
