@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { SearchCondition } from "../types/recommendation";
+import { Button, Field, Stepper } from "../ui";
 import StyleToggle from "./StyleToggle";
 
 interface Props {
@@ -15,41 +16,26 @@ export default function InputForm({ onSubmit }: Props) {
   });
 
   return (
-    <form
-      className="panel"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(c);
-      }}
-    >
+    <form className="panel" onSubmit={(e) => { e.preventDefault(); onSubmit(c); }}>
       <span className="step">① 조건 입력</span>
 
       <div className="field">
-        <label className="label" htmlFor="days">사용할 연차 개수</label>
-        <div className="row">
-          <input
-            id="days"
-            type="number"
-            min={1}
-            value={c.leaveDays}
-            onChange={(e) => setC({ ...c, leaveDays: Number(e.target.value) })}
-          />
-          <span>일</span>
-        </div>
+        <span className="label">사용할 연차 개수</span>
+        <Stepper value={c.leaveDays} unit="일" onChange={(leaveDays) => setC({ ...c, leaveDays })} />
       </div>
 
       <div className="field">
         <span className="label">계산할 기간 범위</span>
         <div className="row">
-          <input type="date" value={c.start} onChange={(e) => setC({ ...c, start: e.target.value })} />
+          <Field type="date" value={c.start} onChange={(e) => setC({ ...c, start: e.target.value })} />
           <span>~</span>
-          <input type="date" value={c.end} onChange={(e) => setC({ ...c, end: e.target.value })} />
+          <Field type="date" value={c.end} onChange={(e) => setC({ ...c, end: e.target.value })} />
         </div>
       </div>
 
       <StyleToggle value={c.style} onChange={(style) => setC({ ...c, style })} />
 
-      <button type="submit" className="btn">계산하기</button>
+      <Button type="submit">계산하기</Button>
     </form>
   );
 }

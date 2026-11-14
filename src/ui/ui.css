@@ -1,0 +1,66 @@
+.ui-btn { height: 56px; padding: 0 20px; border: 0; border-radius: var(--r-btn); font: var(--t-label-l); cursor: pointer; transition: box-shadow var(--t-press) var(--ease), opacity var(--t-toggle); }
+.ui-btn--primary { background: var(--blue-500); color: #fff; width: 100%; }
+.ui-btn--secondary { background: var(--grey-100); color: var(--grey-700); }
+.ui-btn:active:not(:disabled) { box-shadow: inset 0 0 0 999px var(--press-overlay); }
+.ui-btn:disabled { opacity: var(--disabled-opacity); cursor: default; }
+
+.ui-small { height: 36px; padding: 0 12px; border: 0; border-radius: 10px; font: var(--t-label-s); display: inline-flex; align-items: center; gap: 4px; background: var(--grey-100); color: var(--grey-700); cursor: pointer; }
+.ui-small--on { background: var(--blue-50); color: var(--blue-600); }
+
+.ui-icon-btn { width: 44px; height: 44px; border: 0; border-radius: var(--r-input); background: transparent; display: grid; place-items: center; color: var(--grey-900); cursor: pointer; }
+
+.ui-field { height: 56px; width: 100%; padding: 0 16px; border: 0; border-radius: var(--r-input); background: var(--grey-100); font: 500 17px var(--font); color: var(--grey-900); outline: none; }
+.ui-field:focus { box-shadow: inset 0 0 0 1.5px var(--blue-500); }
+
+.ui-stepper { display: flex; align-items: center; justify-content: space-between; height: 72px; padding: 0 14px; border-radius: var(--r-btn); background: var(--grey-100); }
+.ui-stepper__btn { width: 44px; height: 44px; border: 0; border-radius: 22px; background: #fff; color: var(--grey-700); display: grid; place-items: center; cursor: pointer; }
+.ui-stepper__btn--add { background: var(--blue-50); color: var(--blue-500); }
+.ui-stepper__value { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
+.ui-stepper__value small { margin-left: 4px; font: 500 17px var(--font); color: var(--grey-700); }
+
+.ui-chip { height: 44px; padding: 0 20px; border: 0; border-radius: var(--r-pill); background: var(--grey-100); color: var(--grey-700); font: 500 15px var(--font); display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: background var(--t-toggle); }
+.ui-chip--on { background: var(--grey-900); color: #fff; font-weight: 600; padding: 0 18px; }
+
+.ui-badge { font: var(--t-caption); font-weight: 600; color: var(--blue-600); background: var(--blue-50); padding: 5px 8px; border-radius: var(--r-tag); }
+.ui-tag { height: 28px; padding: 0 10px; border-radius: var(--r-tag); background: var(--grey-100); color: var(--grey-700); font: var(--t-caption); display: inline-flex; align-items: center; }
+.ui-hint { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: var(--r-pill); background: var(--blue-50); color: var(--blue-600); font: var(--t-label-s); }
+
+.ui-bar { height: 4px; border-radius: 2px; background: var(--grey-200); }
+.ui-bar--thick { height: 8px; border-radius: 4px; }
+.ui-bar > i { display: block; height: 100%; border-radius: inherit; background: var(--blue-500); transition: width var(--t-enter) var(--ease); }
+
+.ui-select-card { display: flex; align-items: center; gap: 14px; padding: 18px 16px; border: 0; width: 100%; text-align: left; border-radius: var(--r-btn); background: #fff; box-shadow: inset 0 0 0 1px var(--hairline); cursor: pointer; font-family: inherit; transition: box-shadow var(--t-toggle); }
+.ui-select-card--on { box-shadow: inset 0 0 0 1.5px var(--blue-500); }
+.ui-select-card__icon { width: 44px; height: 44px; border-radius: var(--r-input); background: var(--grey-100); color: var(--grey-700); display: grid; place-items: center; flex: none; }
+.ui-select-card--on .ui-select-card__icon { background: var(--blue-50); color: var(--blue-500); }
+.ui-select-card__text { flex: 1; display: grid; gap: 2px; }
+.ui-select-card__text b { font: var(--t-label-l); font-weight: 600; color: var(--grey-900); }
+.ui-select-card__text span { font: var(--t-body-3); color: var(--grey-700); }
+.ui-radio { width: 24px; height: 24px; border-radius: 12px; border: 1.5px solid var(--grey-300); display: grid; place-items: center; color: #fff; flex: none; }
+.ui-select-card--on .ui-radio { background: var(--blue-500); border-color: var(--blue-500); }
+
+.ui-card { background: #fff; border-radius: var(--r-btn); padding: 20px; }
+.ui-card--focus { box-shadow: inset 0 0 0 1.5px var(--blue-500); }
+
+.ui-dots { display: flex; gap: 3px; }
+.ui-dots i { flex: 1; height: 6px; border-radius: 3px; background: var(--grey-200); }
+.ui-dots i.leave { background: var(--blue-500); }
+.ui-dots i.holiday { background: rgba(240, 68, 82, 0.35); }
+
+.ui-loader { display: flex; gap: 6px; }
+.ui-loader i { width: 8px; height: 8px; border-radius: 4px; background: var(--blue-500); animation: ui-dot 1s var(--ease) infinite; }
+.ui-loader i:nth-child(2) { animation-delay: .15s; }
+.ui-loader i:nth-child(3) { animation-delay: .3s; }
+@keyframes ui-dot { 0%,80%,100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+.ui-toast { background: var(--grey-900); color: #fff; padding: 14px 20px; border-radius: 14px; font: var(--t-body-2); box-shadow: var(--shadow-toast); animation: ui-toast var(--t-enter) var(--ease); }
+@keyframes ui-toast { from { opacity: 0; transform: translateY(8px); } }
+
+.ui-cell { position: relative; height: 60px; display: flex; flex-direction: column; align-items: center; }
+.ui-cell__band { position: absolute; top: 4px; left: 0; right: 0; height: 34px; background: var(--blue-50); }
+.ui-cell__num { position: relative; margin-top: 4px; width: 34px; height: 34px; display: grid; place-items: center; font-size: 15px; border-radius: 17px; }
+.ui-cell__label { position: relative; font: 500 11px var(--font); color: var(--grey-600); }
+.ui-cell--sat .ui-cell__num { color: var(--blue-500); font-weight: 600; }
+.ui-cell--holiday .ui-cell__num, .ui-cell--holiday .ui-cell__label { color: var(--red-500); }
+.ui-cell--leave .ui-cell__num { background: var(--blue-500); color: #fff; font-weight: 700; font-size: 16px; }
+.ui-cell--leave .ui-cell__label { color: var(--blue-600); font-weight: 600; }

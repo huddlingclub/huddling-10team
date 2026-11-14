@@ -1,4 +1,5 @@
 import type { Recommendation } from "../types/recommendation";
+import { Badge, Card, Tag } from "../ui";
 
 interface Props {
   results: Recommendation[] | null;
@@ -15,11 +16,23 @@ export default function ResultPanel({ results }: Props) {
         </div>
       ) : (
         <ul className="cards">
-          {results.map((r) => (
-            <li key={r.id} className="card">
-              <strong>{r.start} ~ {r.end}</strong>
-              <span>연차 {r.leaveUsed}일 → 총 {r.totalDays}일 휴식</span>
-              <small>{r.holidayNames.join(", ")}</small>
+          {results.map((r, i) => (
+            <li key={r.id}>
+              <Card focus={i === 0}>
+                <div className="card__head">
+                  <div>
+                    <h3>{r.holidayNames[0]} 연휴</h3>
+                    <p className="card__sub">{r.start} ~ {r.end}</p>
+                  </div>
+                  <Badge>효율 {(r.totalDays / r.leaveUsed).toFixed(1)}배</Badge>
+                </div>
+                <div className="card__flow">
+                  <span>연차 {r.leaveUsed}개</span><i>→</i><b>{r.totalDays}일 휴가</b>
+                </div>
+                <div className="card__flow">
+                  {r.holidayNames.map((n) => <Tag key={n}>{n}</Tag>)}
+                </div>
+              </Card>
             </li>
           ))}
         </ul>
