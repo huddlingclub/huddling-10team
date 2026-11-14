@@ -3,6 +3,7 @@ import type { Plan } from "../types/plan";
 import type { Recommendation } from "../types/recommendation";
 
 export function toRecommendation(p: Plan, idPrefix = "r"): Recommendation {
+  const holidayDates = p.days.filter((d) => d.type === "holiday").map((d) => d.date);
   return {
     id: `${idPrefix}-${p.start}`,
     title: p.title,
@@ -12,5 +13,6 @@ export function toRecommendation(p: Plan, idPrefix = "r"): Recommendation {
     totalDays: p.rest,
     leaveDates: p.leaveDates,
     holidayNames: p.holidays,
+    holidayDates,
   };
 }

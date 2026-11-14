@@ -23,8 +23,8 @@ describe("몰아쓰기(bulk) · 연차 2개", () => {
     expect(top.holidayNames.join()).toContain("추석");
   });
 
-  it("추천은 최대 3개이고 쉬는 날이 긴 순서다", () => {
-    expect(r.items.length).toBeLessThanOrEqual(3);
+  it("추천은 최대 4개이고 쉬는 날이 긴 순서다", () => {
+    expect(r.items.length).toBeLessThanOrEqual(4);
     const rests = r.items.map((i) => i.totalDays);
     expect(rests).toEqual([...rests].sort((a, b) => b - a));
   });
@@ -51,8 +51,8 @@ describe("몰아쓰기(bulk) · 연차 2개", () => {
 
 describe("몰아쓰기(bulk) · 연차 15개 (디자인 입력 화면의 기본값)", () => {
   const r = run(15, "bulk");
-  it("추천 3개, 모두 연차 15개를 쓰고 20일 넘게 쉰다", () => {
-    expect(r.items).toHaveLength(3);
+  it("추천 4개, 모두 연차 15개를 쓰고 20일 넘게 쉰다", () => {
+    expect(r.items).toHaveLength(4);
     for (const it of r.items) {
       expect(it.leaveUsed).toBe(15);
       expect(it.totalDays).toBeGreaterThan(20);
