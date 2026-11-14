@@ -1,5 +1,5 @@
-/** 온보딩 질문 1: 휴가 성향 */
-export type VacationStyle = "bulk" | "balanced" | "short";
+/** 온보딩 질문 1: 휴가 스타일 (길게 한 번 몰아서 / 짧게 자주) */
+export type VacationStyle = "bulk" | "short";
 
 export interface SearchCondition {
   leaveDays: number;

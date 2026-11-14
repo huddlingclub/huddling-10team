@@ -12,8 +12,8 @@ const FIXED: Record<string, string> = {
 export const holidayName = (iso: string): string | undefined => FIXED[iso.slice(5)];
 export const isOff = (iso: string) => isWeekend(iso) || !!holidayName(iso);
 
-const LEN_BY_STYLE = { bulk: [7, 11], balanced: [4, 6], short: [3, 4] } as const;
-const MAX_LEAVE_BY_STYLE = { bulk: 99, balanced: 3, short: 2 } as const;
+const LEN_BY_STYLE = { bulk: [4, 11], short: [3, 4] } as const; // 길게: 4일 이상 / 짧게: 3~4일
+const MAX_LEAVE_BY_STYLE = { bulk: 99, short: 2 } as const; // 짧게: 연차 1~2개
 
 export function sampleRecommend(c: SearchCondition): Recommendation[] {
   const span = diffDays(c.start, c.end) + 1;
@@ -46,4 +46,14 @@ export function sampleRecommend(c: SearchCondition): Recommendation[] {
     if (picked.length >= 5) break;
   }
   return picked; // 효율 높은 순
+}
+
+/** year 해 안에서, 조회 기간에 포함되는 (고정일) 공휴일 수 — 로딩 화면 안내용 */
+export function countHolidaysInYear(c: { start: string; end: string }, year: number): number {
+  const from = c.start > `${year}-01-01` ? c.start : `${year}-01-01`;
+  const to = c.end < `${year}-12-31` ? c.end : `${year}-12-31`;
+  if (from > to) return 0;
+  let n = 0;
+  for (let d = from, i = 0; d <= to && i < 400; d = addDays(d, 1), i++) if (holidayName(d)) n++;
+  return n;
 }

@@ -4,13 +4,14 @@ import { TopBar } from "../components/TopBar";
 import { addDays, daysInMonth, dow, fmt, ym } from "../lib/date";
 import { holidayName } from "../lib/sampleRecommend";
 import type { Recommendation, SearchCondition } from "../types/recommendation";
-import { Badge, Back, Card, DayCell, SmallButton, Toast, Check, Plus, type DayKind } from "../ui";
+import { Badge, Back, Button, Card, DayCell, SmallButton, Toast, Check, Plus, type DayKind } from "../ui";
 
 const WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 const dot = (s: string) => s.replace(/-/g, ".");
 
-export default function ResultScreen({ cond, results, onBack, onEditRange }:
-  { cond: SearchCondition; results: Recommendation[]; onBack: () => void; onEditRange: () => void }) {
+export default function ResultScreen({ cond, results, onBack, onEditRange, onConfirm }:
+  { cond: SearchCondition; results: Recommendation[]; onBack: () => void; onEditRange: () => void;
+    onConfirm: (rec: Recommendation, available: number) => void }) {
   const [focusId, setFocusId] = useState(results[0].id);
   const [picked, setPicked] = useState<string[]>([]);
   const [month, setMonth] = useState(ym(results[0].start));
@@ -26,6 +27,14 @@ export default function ResultScreen({ cond, results, onBack, onEditRange }:
     if (r.leaveUsed > remain) return setToast(`연차가 ${r.leaveUsed - remain}개 모자라요`);
     setPicked([...picked, r.id]);
     focus(r);
+  };
+
+  // 선택(focus)한 연휴로 계획 확인 화면으로 이동. 이미 담은 연휴면 그 연차는 다시 빼지 않는다.
+  const confirmFocused = () => {
+    const r = results.find((x) => x.id === focusId)!;
+    const available = remain + (picked.includes(r.id) ? r.leaveUsed : 0);
+    if (r.leaveUsed > available) return setToast(`연차가 ${r.leaveUsed - available}개 모자라요`);
+    onConfirm(r, available);
   };
 
   const [y, m] = month.split("-").map(Number);
@@ -114,6 +123,7 @@ export default function ResultScreen({ cond, results, onBack, onEditRange }:
         })}
       </div>
       <p className="note">공휴일은 고정 날짜만 반영한 예시예요. 실제 데이터는 연동 예정입니다.</p>
+      <div className="screen__cta"><Button onClick={confirmFocused}>이 연휴로 계획 확인하기</Button></div>
       {toast && <div className="toast-wrap"><Toast message={toast} onClose={() => setToast(undefined)} /></div>}
     </div>
   );
