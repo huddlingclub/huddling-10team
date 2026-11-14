@@ -3,23 +3,11 @@ import external from "../assets/icons/external.svg";
 import cheer from "../assets/illustrations/penguin-cheer.png";
 import shadow from "../assets/illustrations/shadow.svg";
 import { BackButton } from "../components/TopBar";
-import { addDays, dotDateWd, longDate } from "../lib/date";
-import { periodLabel, planText } from "../lib/plan";
+import { longDate } from "../lib/date";
+import { googleCalendarUrl, periodLabel, planText } from "../lib/plan";
+import SavedModal from "../components/SavedModal";
 import type { Recommendation } from "../types/recommendation";
 import { Button, Toast } from "../ui";
-
-const ymd = (iso: string) => iso.replace(/-/g, "");
-
-/** 구글 캘린더 '일정 만들기' 링크 (종일 일정, 종료일은 다음 날 기준) */
-function googleCalendarUrl(rec: Recommendation) {
-  const q = new URLSearchParams({
-    action: "TEMPLATE",
-    text: `${rec.title} (${rec.totalDays}일)`,
-    dates: `${ymd(rec.start)}/${ymd(addDays(rec.end, 1))}`,
-    details: `연차 신청일: ${rec.leaveDates.map(longDate).join(", ")}`,
-  });
-  return `https://calendar.google.com/calendar/render?${q}`;
-}
 
 interface Props {
   rec: Recommendation;
@@ -31,6 +19,7 @@ interface Props {
 
 export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Props) {
   const [toast, setToast] = useState<string>();
+  const [saved, setSaved] = useState(false);
   useEffect(() => {
     // 05에서 "이 일정 복사하기"로 넘어오면 일정 문구를 클립보드에 복사 (실패해도 흐름은 계속)
     navigator.clipboard?.writeText(planText(rec)).then(() => setToast("일정을 복사했어요"), () => {});
@@ -77,9 +66,9 @@ export default function ConfirmScreen({ rec, available, onBack, onConfirm }: Pro
 
       <div className="cta2">
         <button type="button" className="ui-btn ui-btn--white" onClick={onBack}>다른 일정 고르기</button>
-        {/* TODO: 확정 후 동작(저장/공유 등)은 기획 확정 시 연결 */}
-        <Button onClick={() => { onConfirm?.(); setToast("휴가 계획을 확인했어요"); }}>확인</Button>
+        <Button onClick={() => { onConfirm?.(); setSaved(true); }}>확인</Button>
       </div>
+      {saved && <SavedModal recommendation={rec} leaveDays={available} onClose={() => setSaved(false)} />}
       {toast && <div className="toast-wrap"><Toast message={toast} onClose={() => setToast(undefined)} /></div>}
     </div>
   );
