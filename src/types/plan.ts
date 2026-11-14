@@ -10,8 +10,6 @@ export interface PlanParams {
   from: string; // YYYY-MM-DD
   to: string;
   holidays: Holiday[];
-  /** 나눠쓰기에서 한 번의 연휴에 쓰는 연차 최대 개수 (기본 2) */
-  splitMaxLeave?: number;
 }
 
 /** 화면 칸 나열용: 연차 / 공휴일 / 주말 */
