@@ -29,6 +29,8 @@ export default function App() {
   // TODO: lib/sampleRecommend → 실제 공휴일 API + 추천 알고리즘으로 교체
   const results = useMemo(() => sampleRecommend(cond), [cond]);
   const done = useCallback(() => setScreen("result"), []);
+  // 저장 완료 모달의 "계속 확인하기": 첫 화면으로 (입력해 둔 조건은 그대로 두고, 확인하던 계획만 비운다)
+  const goHome = useCallback(() => { setPlan(undefined); setScreen("input"); }, []);
   // 확인 화면에 넘길 계획: 몰아서는 연휴 1개, 짧게 자주는 고른 연휴 여러 개
   const [plan, setPlan] = useState<{ recs: Recommendation[]; available: number }>();
   useEffect(() => { window.scrollTo(0, 0); }, [screen]); // 화면 전환 시 맨 위로 (반환값 없음)
@@ -64,9 +66,9 @@ export default function App() {
             onEditRange={() => setScreen("input")} />
         ))}
       {screen === "confirm" && plan && (style === "short" ? (
-        <ShortConfirmScreen recs={plan.recs} available={plan.available} onBack={() => setScreen("result")} />
+        <ShortConfirmScreen recs={plan.recs} available={plan.available} onBack={() => setScreen("result")} onHome={goHome} />
       ) : (
-        <ConfirmScreen rec={plan.recs[0]} available={plan.available} onBack={() => setScreen("result")} />
+        <ConfirmScreen rec={plan.recs[0]} available={plan.available} onBack={() => setScreen("result")} onHome={goHome} />
       ))}
     </div>
   );

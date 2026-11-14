@@ -14,10 +14,12 @@ interface Props {
   /** 이 계획을 적용하기 전 남은 연차 */
   available: number;
   onBack: () => void;
+  /** 저장 완료 모달의 "계속 확인하기" → 첫 화면으로 */
+  onHome?: () => void;
 }
 
 /** 07 휴가 계획 확인 · 짧게 자주 — 고른 연휴 여러 개를 한 번에 확인 */
-export default function ShortConfirmScreen({ recs, available, onBack }: Props) {
+export default function ShortConfirmScreen({ recs, available, onBack, onHome }: Props) {
   const [saved, setSaved] = useState(false);
   const n = recs.length;
   const total = recs.reduce((a, r) => a + r.totalDays, 0);
@@ -80,7 +82,7 @@ export default function ShortConfirmScreen({ recs, available, onBack }: Props) {
         <button type="button" className="ui-btn ui-btn--white" onClick={onBack}>다른 조합 보기</button>
         <Button onClick={() => setSaved(true)}>확인</Button>
       </div>
-      {saved && <SavedModal recommendations={recs} leaveDays={available} onClose={() => setSaved(false)} />}
+      {saved && <SavedModal recommendations={recs} leaveDays={available} onClose={() => setSaved(false)} onContinue={onHome} />}
     </div>
   );
 }
