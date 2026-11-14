@@ -42,3 +42,104 @@ input[type="number"], input[type="date"] { flex: 1; min-width: 0; padding: 12px;
 @media (min-width: 720px) {
   .radio-group { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── 공통 화면 ── */
+.screen { max-width: 480px; margin: 0 auto; padding: 0 0 100px; background: #fff; min-height: 100vh; }
+.screen-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #eee; font-size: 17px; font-weight: 700; }
+.back-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--ink); padding: 0 8px 0 0; }
+.screen-footer { padding: 16px 20px 32px; color: var(--mute); font-size: 12px; line-height: 1.6; }
+.blue { color: #3366FF; }
+.primary-btn { display: block; width: calc(100% - 40px); margin: 0 20px; padding: 18px; background: #3366FF; color: #fff; border: none; border-radius: 12px; font: inherit; font-size: 17px; font-weight: 700; cursor: pointer; }
+.text-btn { display: block; width: 100%; padding: 16px; background: none; border: none; font: inherit; font-size: 15px; color: var(--ink); cursor: pointer; text-align: center; }
+.outline-btn { padding: 8px 14px; background: #fff; border: 1px solid #ddd; border-radius: 8px; font: inherit; font-size: 13px; cursor: pointer; }
+
+/* ── 결과 화면 ── */
+.leave-summary-card { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px; margin: 16px 20px; background: #fff; border: 1px solid #eee; border-radius: 12px; }
+.leave-summary__label { font-size: 13px; color: var(--mute); margin-bottom: 4px; }
+.leave-summary__days { font-size: 36px; font-weight: 800; line-height: 1.1; }
+.leave-summary__period { font-size: 12px; color: var(--mute); margin-top: 6px; }
+
+.best-card { margin: 0 20px 16px; padding: 20px; background: #EEF2FF; border-radius: 16px; }
+.best-card__tag { font-size: 13px; color: #3366FF; font-weight: 600; margin-bottom: 8px; }
+.best-card__title { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+.best-card__date { font-size: 14px; color: var(--mute); margin-bottom: 16px; }
+.best-card__leave-dates { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.best-card__leave-label { font-size: 13px; color: var(--mute); }
+.best-card__leave-value { font-size: 16px; font-weight: 700; color: #3366FF; }
+.best-card__remaining { font-size: 13px; color: var(--mute); }
+
+/* ── 미니 캘린더 ── */
+.mini-cal { margin: 0 20px 20px; padding: 20px; border: 1px solid #eee; border-radius: 16px; }
+.mini-cal__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.mini-cal__title { font-size: 18px; font-weight: 700; }
+.mini-cal__nav { display: flex; gap: 8px; }
+.mini-cal__nav button { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--ink); }
+.mini-cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+.mini-cal__day-label { font-size: 13px; color: var(--mute); padding: 4px 0 8px; }
+.mini-cal__day-label.is-sun { color: #FF4444; }
+.mini-cal__day-label.is-sat { color: #3366FF; }
+.mini-cal__cell { padding: 8px 4px; font-size: 14px; border-radius: 50%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
+.mini-cal__cell.is-sun { color: #FF4444; }
+.mini-cal__cell.is-sat { color: #3366FF; }
+.mini-cal__cell.is-leave { background: #3366FF; color: #fff; border-radius: 50%; font-weight: 700; }
+.mini-cal__cell.is-holiday { color: #FF4444; font-weight: 700; }
+.mini-cal__cell.is-range { background: #EEF2FF; border-radius: 0; }
+.mini-cal__legend { display: flex; gap: 16px; margin-top: 16px; font-size: 12px; color: var(--mute); }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend-dot.is-leave { background: #3366FF; }
+.legend-dot.is-range { background: #EEF2FF; border: 1px solid #ccc; }
+.legend-dot.is-holiday { background: #FF4444; }
+
+/* ── 다른 추천 일정 ── */
+.other-section { padding: 20px; }
+.other-section__title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.other-section__desc { font-size: 13px; color: var(--mute); margin-bottom: 16px; }
+.other-card { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 16px; margin-bottom: 10px; background: #fff; border: 1px solid #eee; border-radius: 12px; cursor: pointer; text-align: left; font: inherit; }
+.other-card.is-selected { border-color: #3366FF; background: #EEF2FF; }
+.other-card__name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.other-card__date { font-size: 13px; color: var(--mute); }
+.other-card__total { font-size: 16px; font-weight: 700; color: #3366FF; text-align: right; }
+.other-card__leave { font-size: 13px; color: var(--mute); }
+
+/* ── 확인 화면 ── */
+.confirm-summary-card { margin: 16px 20px; padding: 20px; background: #EEF2FF; border-radius: 16px; }
+.confirm-summary__tag { font-size: 13px; color: #3366FF; font-weight: 600; margin-bottom: 8px; }
+.confirm-summary__title { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+.confirm-summary__date { font-size: 14px; color: var(--mute); }
+
+.confirm-section { padding: 20px 20px 0; }
+.confirm-section__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.confirm-section__title { font-size: 18px; font-weight: 700; }
+.confirm-section__total { font-size: 16px; font-weight: 700; }
+.confirm-leave-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #eee; font-size: 15px; }
+.confirm-leave-balance { display: flex; justify-content: space-between; padding: 14px 16px; margin-top: 12px; background: #f8f8f8; border-radius: 10px; font-size: 14px; }
+
+/* ── 타임라인 ── */
+.timeline { display: flex; gap: 6px; margin: 16px 0 8px; flex-wrap: wrap; }
+.timeline-seg { padding: 10px 12px; border-radius: 10px; text-align: center; min-width: 56px; }
+.timeline-seg.weekend { background: #f0f0f0; }
+.timeline-seg.leave { background: #3366FF; color: #fff; }
+.timeline-seg.holiday { background: #FFE8E8; color: #FF4444; }
+.timeline-seg__dates { font-size: 12px; font-weight: 600; }
+.timeline-seg__type { font-size: 11px; margin-top: 2px; opacity: 0.8; }
+.timeline-desc { font-size: 13px; color: var(--mute); margin-top: 8px; }
+
+/* ── Google 캘린더 추가 ── */
+.calendar-add-card { margin: 20px; padding: 20px; background: #f8f8f8; border-radius: 16px; }
+.calendar-add-card__title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+.calendar-add-card__desc { font-size: 14px; color: var(--mute); line-height: 1.6; margin-bottom: 16px; }
+.google-cal-btn { display: block; width: 100%; padding: 14px; background: #fff; border: 1px solid #3366FF; border-radius: 10px; color: #3366FF; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; }
+.calendar-add-card__note { font-size: 12px; color: var(--mute); margin-top: 10px; text-align: center; }
+.confirm-notice { padding: 0 20px 16px; font-size: 12px; color: var(--mute); line-height: 1.6; }
+.confirm-actions { padding: 0 0 20px; }
+
+/* ── 저장 완료 모달 ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; justify-content: center; z-index: 100; }
+.modal { width: 100%; max-width: 480px; background: #fff; border-radius: 20px 20px 0 0; padding: 32px 24px 40px; }
+.modal__title { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+.modal__date { font-size: 15px; color: var(--mute); margin-bottom: 4px; }
+.modal__info { font-size: 14px; color: var(--mute); margin-bottom: 24px; }
+.modal__google-btn { margin-bottom: 12px; }
+.modal__close-btn { margin-bottom: 16px; }
+.modal__notice { font-size: 12px; color: var(--mute); text-align: center; }
