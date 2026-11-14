@@ -19,4 +19,6 @@ export interface Recommendation {
   totalDays: number; // 쉬는 총 일수
   leaveDates: string[];
   holidayNames: string[];
+  holidayDates: string[]; // 공휴일 날짜 (YYYY-MM-DD)
+  label?: string; // e.g. "추석"
 }

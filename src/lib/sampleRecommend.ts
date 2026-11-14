@@ -29,11 +29,12 @@ export function sampleRecommend(c: SearchCondition): Recommendation[] {
       if (!isOff(e)) continue;
       if (days.some((d) => c.avoidMonths.includes(ym(d)))) continue;
       const leaveDates = days.filter((d) => !isOff(d));
+      const holidayDates = days.filter((d) => !!holidayName(d));
       const names = [...new Set(days.map(holidayName).filter((n): n is string => !!n))];
       if (!leaveDates.length || leaveDates.length > Math.min(c.leaveDays, MAX_LEAVE_BY_STYLE[c.style]) || !names.length) continue;
       cands.push({
         id: `${s}`, title: `${names[0]} 연휴`, start: s, end: e,
-        leaveUsed: leaveDates.length, totalDays: len, leaveDates, holidayNames: names,
+        leaveUsed: leaveDates.length, totalDays: len, leaveDates, holidayNames: names, holidayDates,
       });
     }
   }
