@@ -15,7 +15,7 @@ export default function LoadingScreen({ tip, onDone }: { tip: string; onDone: ()
 
   return (
     <div className="screen screen--load">
-      <img className="load__img" src={cast} width={280} height={280} alt="" />
+      <div className="load__img"><img src={cast} alt="" /></div>
       <h2 className="load__title" role="status">황금연휴를 찾고 있어요</h2>
       <p className="load__desc">징검다리 연휴를 찾는 중이에요</p>
       <img className="load__dots" src={dots} width={33} height={7} alt="" />

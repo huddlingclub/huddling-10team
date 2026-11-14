@@ -6,8 +6,6 @@ export interface SearchCondition {
   start: string; // YYYY-MM-DD
   end: string;
   style: VacationStyle;
-  /** 피하고 싶은 달 (YYYY-MM) */
-  avoidMonths: string[];
 }
 
 export interface Recommendation {

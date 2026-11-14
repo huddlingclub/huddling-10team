@@ -1,7 +1,7 @@
 import { useState } from "react";
 import planeIcon from "../assets/icons/plane.svg";
 import sunIcon from "../assets/icons/sun.svg";
-import { StepBar } from "../components/TopBar";
+import { BackButton } from "../components/TopBar";
 import StyleOption from "../components/StyleOption";
 import type { VacationStyle } from "../types/recommendation";
 import { Button } from "../ui";
@@ -11,7 +11,7 @@ export default function StyleScreen({ value, onBack, onNext }:
   const [v, setV] = useState(value);
   return (
     <div className="screen screen--p24">
-      <StepBar step={1} total={2} onBack={onBack} />
+      <div className="nav1"><BackButton onClick={onBack} /></div>
       <h2 className="q-title">어떤 휴가를<br />좋아하세요?</h2>
       <p className="q-desc">고른 스타일로 추천 방식이 달라져요</p>
       <div className="style-opts">

@@ -1,11 +1,11 @@
 import tilt from "../assets/illustrations/penguin-tilt.png";
 import { TopBar } from "../components/TopBar";
-import { dotDate, monthLabel, monthRange } from "../lib/date";
+import { dotDate, monthRange } from "../lib/date";
 import type { SearchCondition } from "../types/recommendation";
 import { Button, ProgressBar } from "../ui";
 
-export default function EmptyScreen({ cond, onBack, onEditRange, onEditAvoid }:
-  { cond: SearchCondition; onBack: () => void; onEditRange: () => void; onEditAvoid: () => void }) {
+export default function EmptyScreen({ cond, onBack, onEditRange }:
+  { cond: SearchCondition; onBack: () => void; onEditRange: () => void }) {
   const months = monthRange(cond.start.slice(0, 7), cond.end.slice(0, 7)).length;
   return (
     <div className="screen screen--grey screen--p16 screen--nav52">
@@ -28,13 +28,11 @@ export default function EmptyScreen({ cond, onBack, onEditRange, onEditAvoid }:
       <section className="empty-card">
         <img src={tilt} width={164} height={150} alt="" />
         <h2>조건에 맞는 황금연휴가 없어요</h2>
-        <p>기간을 넓혀보세요.<br />피하고 싶은 달을 줄여도 찾을 수 있어요.</p>
+        <p>기간을 넓히거나 연차를 늘려보세요.</p>
         <div className="tags">
           <span className="tag tag--on">기간 {months}개월</span>
           <span className="tag">연차 {cond.leaveDays}개</span>
-          {cond.avoidMonths.length > 0 && <span className="tag">피하는 달 {cond.avoidMonths.map(monthLabel).join(", ")}</span>}
         </div>
-        <button type="button" className="btn-sub" onClick={onEditAvoid}>피하는 달 다시 고르기</button>
       </section>
 
       <div className="screen__cta"><Button onClick={onEditRange}>기간 넓히기</Button></div>

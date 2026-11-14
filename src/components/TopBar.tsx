@@ -1,5 +1,4 @@
 import backIcon from "../assets/icons/back.svg";
-import { ProgressBar } from "../ui";
 
 export function BackButton({ onClick }: { onClick: () => void }) {
   return (
@@ -14,16 +13,6 @@ export function TopBar({ title, onBack }: { title: string; onBack: () => void })
     <div className="topbar">
       <BackButton onClick={onBack} />
       <strong>{title}</strong>
-    </div>
-  );
-}
-
-export function StepBar({ step, total, onBack }: { step: number; total: number; onBack: () => void }) {
-  return (
-    <div className="stepbar">
-      <BackButton onClick={onBack} />
-      <ProgressBar value={(step / total) * 100} />
-      <span>{step}/{total}</span>
     </div>
   );
 }
