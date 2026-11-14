@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import chevronLeft from "../assets/icons/chevron-left.svg";
 import chevronRight from "../assets/icons/chevron-right.svg";
 import sparkle from "../assets/icons/sparkle.svg";
@@ -24,9 +24,22 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
   const [focusId, setFocusId] = useState(longest.id);
   const rec = results.find((r) => r.id === focusId) ?? longest;
   const [month, setMonth] = useState(ym(rec.start));
+  const [dir, setDir] = useState<"next" | "prev">("next"); // 캘린더 슬라이드 방향
+  const [entered, setEntered] = useState(false); // 첫 등장 모션은 한 번만
+  const [swapped, setSwapped] = useState(false); // 다른 일정을 고른 뒤에만 교체 모션
+  useEffect(() => { const t = setTimeout(() => setEntered(true), 900); return () => clearTimeout(t); }, []);
+  const go = (m: string) => { setDir(m > month ? "next" : "prev"); setMonth(m); };
   const others = results.filter((r) => r.id !== rec.id);
 
-  const select = (r: Recommendation) => { setFocusId(r.id); setMonth(ym(r.start)); };
+  const select = (r: Recommendation) => {
+    setFocusId(r.id);
+    setSwapped(true);
+    go(ym(r.start));
+    // 선택한 일정이 위쪽 요약/캘린더에 반영되므로 맨 위로 부드럽게 올려준다 (모션 줄이기 설정이면 즉시)
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: calm ? "auto" : "smooth" });
+  };
+
 
   const [y, m] = month.split("-").map(Number);
   const cells = useMemo(() => {
@@ -51,7 +64,7 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
         <button type="button" className="nav3__action" onClick={onEditRange}>조건 변경</button>
       </div>
 
-      <section className="panel20 r-summary">
+      <section key={rec.id} className={`panel20 r-summary ${entered ? (swapped ? "r-swap" : "") : "r-enter"}`} style={{ "--i": 0 } as React.CSSProperties}>
         <span className="r-badge">
           <img src={sparkle} width={11} height={11} alt="" />
           {rec.id === longest.id ? "가장 길게 쉬는 추천" : "선택한 추천"}
@@ -64,14 +77,14 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
         </dl>
       </section>
 
-      <section className="panel24 r-cal">
+      <section className={`panel24 r-cal ${entered ? "" : "r-enter"}`} style={{ "--i": 1 } as React.CSSProperties}>
         <div className="r-cal__head">
           <h3>{y}년 {m}월</h3>
           <div>
-            <button type="button" aria-label="이전 달" disabled={month <= startYm} onClick={() => setMonth(shiftMonth(month, -1))}>
+            <button type="button" aria-label="이전 달" disabled={month <= startYm} onClick={() => go(shiftMonth(month, -1))}>
               <img src={chevronLeft} width={20} height={20} alt="" />
             </button>
-            <button type="button" aria-label="다음 달" disabled={month >= endYm} onClick={() => setMonth(shiftMonth(month, 1))}>
+            <button type="button" aria-label="다음 달" disabled={month >= endYm} onClick={() => go(shiftMonth(month, 1))}>
               <img src={chevronRight} width={20} height={20} alt="" />
             </button>
           </div>
@@ -79,7 +92,7 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
         <div className="r-cal__grid r-cal__week">
           {WEEK.map((w, i) => <span key={w} className={i === 0 ? "sun" : i === 6 ? "sat" : ""}>{w}</span>)}
         </div>
-        <div className="r-cal__grid">
+        <div key={`${rec.id}-${month}`} className={`r-cal__grid r-slide r-slide--${dir}`}>
           {cells.map((iso, i) => {
             if (!iso) return <span key={`b${i}`} className="r-cell" />;
             const w = dow(iso);
@@ -88,7 +101,7 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
             const tone = holidayName(iso) || w === 0 ? "red" : w === 6 ? "blue" : "";
             return (
               <span key={iso} className={`r-cell ${inRange ? "is-band" : ""} ${tone}`}>
-                {leave ? <b className="r-cell__sel">{Number(iso.slice(8))}</b> : Number(iso.slice(8))}
+                {leave ? <b className="r-cell__sel" style={{ "--d": rec.leaveDates.indexOf(iso) } as React.CSSProperties}>{Number(iso.slice(8))}</b> : Number(iso.slice(8))}
               </span>
             );
           })}
@@ -101,7 +114,7 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
         </div>
       </section>
 
-      <section className="r-remain">
+      <section className={`r-remain ${entered ? "" : "r-enter"}`} style={{ "--i": 2 } as React.CSSProperties}>
         <div>
           <p>남은 연차</p>
           <small>{dotDate(cond.start)} – {dotDate(cond.end)} 기준</small>
@@ -111,9 +124,9 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
 
       {others.length > 0 && (
         <>
-          <h3 className="r-others__title">다른 추천 일정</h3>
+          <h3 className={`r-others__title ${entered ? "" : "r-enter"}`} style={{ "--i": 3 } as React.CSSProperties}>다른 추천 일정</h3>
           <p className="r-others__desc">공휴일과 주말을 이어 쉬어보세요</p>
-          <ul className="r-others">
+          <ul className={`r-others ${entered ? "" : "r-enter"}`} style={{ "--i": 4 } as React.CSSProperties}>
             {others.map((r) => (
               <li key={r.id}>
                 <button type="button" className="r-row" onClick={() => select(r)}>
@@ -126,7 +139,7 @@ export default function ResultScreen({ cond, results, onBack, onEditRange, onCon
         </>
       )}
 
-      <p className="r-foot">주 5일 근무 · 대한민국 공휴일 기준<br />회사 휴무와 연차 만료일에 따라 달라질 수 있어요.</p>
+      <p className={`r-foot ${entered ? "" : "r-enter"}`} style={{ "--i": 5 } as React.CSSProperties}>주 5일 근무 · 대한민국 공휴일 기준<br />회사 휴무와 연차 만료일에 따라 달라질 수 있어요.</p>
 
       <div className="screen__cta"><Button onClick={() => onConfirm(rec, available)}>이 일정 복사하기</Button></div>
     </div>

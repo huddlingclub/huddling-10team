@@ -1,0 +1,66 @@
+/* 인터랙션 모션 — tokens.css 의 모션 값(눌림 120ms / 토글 200ms / 진입 320ms)을 따른다 */
+
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes bump { 0% { transform: scale(0.98); } 100% { transform: scale(1); } }
+@keyframes tick { from { opacity: 0.25; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes swap-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes slide-next { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes slide-prev { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlay-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes modal-in { from { opacity: 0; transform: translateY(16px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes modal-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(10px) scale(0.97); } }
+
+/* ── 터치 피드백: 눌렀을 때 살짝 줄어들었다가 돌아온다 ── */
+.style-opt, .r-row, .lstep__btn, .nav__back, .nav3__action, .export__btn, .modal__google, .modal__close,
+.btn-sub, .r-cal__head button, .ui-chip, .ui-small, .in-select select {
+  transition: transform var(--t-press) var(--ease), box-shadow var(--t-toggle) var(--ease),
+    background-color var(--t-toggle) var(--ease), opacity var(--t-toggle) var(--ease);
+}
+.ui-btn { transition: transform var(--t-press) var(--ease), box-shadow var(--t-press) var(--ease), opacity var(--t-toggle); }
+.ui-btn:active:not(:disabled) { transform: scale(0.98); }
+.style-opt:active, .r-row:active { transform: scale(0.98); }
+.lstep__btn:active:not(:disabled), .modal__google:active, .modal__close:active, .export__btn:active,
+.btn-sub:active, .ui-chip:active, .ui-small:active { transform: scale(0.95); }
+.nav__back:active, .r-cal__head button:active:not(:disabled), .nav3__action:active { transform: scale(0.88); }
+.r-row:active { background: var(--grey-50); }
+
+/* ── 02 선택 카드 ── */
+.style-opt__icon { transition: background-color var(--t-toggle) var(--ease); }
+.style-opt__bars i { transition: background-color var(--t-toggle) var(--ease); }
+.style-opt.is-on { animation: bump var(--t-toggle) var(--ease); }
+.style-opt__radio { animation: pop var(--t-toggle) var(--ease); }
+
+/* ── 01 스테퍼 숫자 ── */
+.lstep__num { display: inline-block; animation: tick var(--t-toggle) var(--ease); }
+
+/* ── 05 결과 화면 ── */
+.r-enter { animation: rise var(--t-enter) var(--ease) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.r-swap { animation: swap-in 240ms var(--ease) both; }
+.r-cal { overflow: hidden; }
+.r-slide--next { animation: slide-next 260ms var(--ease) both; }
+.r-slide--prev { animation: slide-prev 260ms var(--ease) both; }
+.r-cell.is-band { animation: fade-in 260ms var(--ease) both; }
+.r-cell__sel { animation: pop 320ms var(--ease) both; animation-delay: calc(120ms + var(--d, 0) * 70ms); }
+
+/* ── 04 로딩 ── */
+.screen--load { animation: fade-in var(--t-enter) var(--ease) both; }
+.load__img { animation: float 3.2s ease-in-out infinite; }
+.load__dots { animation: pulse 1.2s ease-in-out infinite; }
+.step-row, .step-row__badge { transition: color var(--t-toggle) var(--ease), background-color var(--t-toggle) var(--ease); }
+.step-row--done .step-row__badge img, .step-row--active .step-row__badge { animation: pop 240ms var(--ease); }
+
+/* ── 저장 완료 모달 ── */
+.modal-overlay { animation: overlay-in var(--t-toggle) var(--ease) both; }
+.modal { animation: modal-in var(--t-enter) var(--ease) both; }
+.modal-overlay.is-closing { animation: overlay-out 180ms var(--ease) both; }
+.modal-overlay.is-closing .modal { animation: modal-out 180ms var(--ease) both; }
+
+/* 모션 줄이기 설정을 켠 사용자에게는 움직임을 끈다 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
